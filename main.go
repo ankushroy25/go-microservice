@@ -1,17 +1,12 @@
 package main
 
-import (
-	"context"
-	"fmt"
-	"log"
-)
+import "flag"
 
 func main() {
-	svc := NewMetricService(&priceFetcher{})
-	price, err := svc.FetchPrice(context.Background(), "BTC")
 
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(price)
+	listenAddress := flag.String("listen-address", ":8000", "The address to listen on for HTTP requests.")
+	svc := NewMetricService(&priceFetcher{})
+
+	server := newJsonApiServer(*listenAddress, svc)
+	server.Run()
 }

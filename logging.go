@@ -18,9 +18,10 @@ func NewLoggingService(next PriceFetcher) PriceFetcher {
 func (s *loggingService) FetchPrice(ctx context.Context, ticker string) (price float64, err error) {
 	defer func(begin time.Time) {
 		logrus.WithFields(logrus.Fields{
-			"took":  time.Since(begin),
-			"price": price,
-			"err":   err,
+			"requestID": ctx.Value("requestID"),
+			"took":      time.Since(begin),
+			"price":     price,
+			"err":       err,
 		}).Info("fetchPrice")
 
 	}(time.Now())
